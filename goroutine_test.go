@@ -2,6 +2,7 @@ package goroutine
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -16,12 +17,17 @@ func RunMukbang() {
 
 func GiveChannelOnlyIn(channel chan<- string) {
 	time.Sleep(3 * time.Second)
-	channel <- "Hayuk Mabar Bro"
+	for i := 0; i < 3; i++ {
+		channel <- "Hayuk Mabar Bro " + strconv.Itoa(i)
+	}
+
 }
 
 func ReceiveChannelOnlyOut(channel <-chan string) {
-	data := <-channel
-	fmt.Println(data)
+	for data := range channel {
+		fmt.Println(data)
+	}
+
 }
 
 func TestGoroutine(t *testing.T) {
