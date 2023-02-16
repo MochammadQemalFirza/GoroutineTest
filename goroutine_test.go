@@ -17,12 +17,9 @@ func RunMukbang() {
 }
 
 func GiveChannelOnlyIn(channel chan<- string) {
-	var mutex sync.Mutex
 	time.Sleep(2 * time.Second)
 	for i := 0; i < 3; i++ {
-		mutex.Lock()
 		channel <- "Hayuk Mabar Bro " + strconv.Itoa(i)
-		mutex.Unlock()
 	}
 }
 
@@ -43,6 +40,7 @@ func GChan2(channel2 chan<- string) {
 }
 
 func TestGoroutine(t *testing.T) {
+
 	channel := make(chan string)
 	channel1 := make(chan string)
 	channel2 := make(chan string)
@@ -51,8 +49,10 @@ func TestGoroutine(t *testing.T) {
 	defer close(channel2)
 
 	for i := 0; i < 3; i++ {
+
 		go GiveChannelOnlyIn(channel)
 		go ReceiveChannelOnlyOut(channel)
+
 		go RunHelloGaes(i)
 		go RunMukbang()
 		fmt.Println("eits kenapa tuch")
@@ -70,12 +70,26 @@ func TestGoroutine(t *testing.T) {
 		case data := <-channel2:
 			fmt.Println(data)
 			counter++
-		default:
-			fmt.Println("Waiting for the data ...")
+			// default:
+			// 	fmt.Println("Waiting for the data ...")
 		}
 		if counter == 2 {
 			break
 		}
 	}
+
+	y := 0
+	var mutex sync.Mutex
+	for i := 0; i < 5; i++ {
+		go func() {
+			for j := 0; j < 10; j++ {
+				mutex.Lock()
+				y += 1
+				mutex.Unlock()
+			}
+		}()
+	}
+
 	time.Sleep(10 * time.Second)
+	fmt.Println("y Sebanyak = ", y)
 }
