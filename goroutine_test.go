@@ -3,6 +3,7 @@ package goroutine
 import (
 	"fmt"
 	"strconv"
+	"sync"
 	"testing"
 	"time"
 )
@@ -16,9 +17,12 @@ func RunMukbang() {
 }
 
 func GiveChannelOnlyIn(channel chan<- string) {
+	var mutex sync.Mutex
 	time.Sleep(2 * time.Second)
 	for i := 0; i < 3; i++ {
+		mutex.Lock()
 		channel <- "Hayuk Mabar Bro " + strconv.Itoa(i)
+		mutex.Unlock()
 	}
 }
 
@@ -66,6 +70,8 @@ func TestGoroutine(t *testing.T) {
 		case data := <-channel2:
 			fmt.Println(data)
 			counter++
+		default:
+			fmt.Println("Waiting for the data ...")
 		}
 		if counter == 2 {
 			break
