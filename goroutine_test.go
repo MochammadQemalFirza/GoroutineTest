@@ -2,6 +2,7 @@ package goroutine
 
 import (
 	"fmt"
+	"runtime"
 	"strconv"
 	"sync"
 	"testing"
@@ -46,7 +47,9 @@ func GChan2(channel2 chan<- string) {
 }
 
 func TestGoroutine(t *testing.T) {
-
+	totalCPU := runtime.NumCPU()
+	totalThread := runtime.GOMAXPROCS(-1)
+	totalGoroutine := runtime.NumGoroutine()
 	channel := make(chan string)
 	channel1 := make(chan string)
 	channel2 := make(chan string)
@@ -98,4 +101,7 @@ func TestGoroutine(t *testing.T) {
 
 	time.Sleep(10 * time.Second)
 	fmt.Println("y Sebanyak = ", y)
+	fmt.Println("total CPU = ", totalCPU)
+	fmt.Println("total Thread = ", totalThread)
+	fmt.Println("total Goroutine = ", totalGoroutine)
 }
