@@ -17,10 +17,12 @@ func RunMukbang() {
 }
 
 func GiveChannelOnlyIn(channel chan<- string) {
-	time.Sleep(2 * time.Second)
-	for i := 0; i < 3; i++ {
-		channel <- "Hayuk Mabar Bro " + strconv.Itoa(i)
-	}
+	time.AfterFunc(2*time.Second, func() {
+		for i := 0; i < 3; i++ {
+			channel <- "Hayuk Mabar Bro " + strconv.Itoa(i)
+		}
+	})
+
 }
 
 func ReceiveChannelOnlyOut(channel <-chan string) {
@@ -30,13 +32,17 @@ func ReceiveChannelOnlyOut(channel <-chan string) {
 }
 
 func GChan1(channel1 chan<- string) {
-	time.Sleep(2 * time.Second)
-	channel1 <- "lezat dan bergizi"
+	time.AfterFunc(2*time.Second, func() {
+		channel1 <- "lezat dan bergizi"
+	})
+
 }
 
 func GChan2(channel2 chan<- string) {
-	time.Sleep(2 * time.Second)
-	channel2 <- "rasanya seperti menjadi iron men"
+	time.AfterFunc(2*time.Second, func() {
+		channel2 <- "rasanya seperti menjadi iron men"
+	})
+
 }
 
 func TestGoroutine(t *testing.T) {
